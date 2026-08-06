@@ -4,27 +4,25 @@ import arc.ApplicationListener;
 import arc.Core;
 import arc.files.Fi;
 import arc.util.Log;
-import mindustry.Vars;
-import mindustry.game.Schematic;
 
 import static mindustry.Vars.ui;
 
-public class DropdownListener implements ApplicationListener {
+public class DropdownListener implements ApplicationListener{
     @Override
-    public void fileDropped(Fi file) {
-        if(file.extEquals("png")){
-            handleImageMschImport(file);
-        }
-    }
+    public void fileDropped(Fi file){
+        if(!file.extEquals("png")) return;
 
-    private void handleImageMschImport(Fi file){
         Core.app.post(() -> {
             try{
-                if (ui.schematics instanceof ExtSchematicsDialog dialog){
-                    dialog.importFromPngAndShow(file);
-                } else {
-                    Log.err("For some reason image schematics dialog was not embed. This probably because of other mods.");
+                ExtSchematicsDialog dialog;
+                if(ui.schematics instanceof ExtSchematicsDialog d){
+                    dialog = d;
+                }else{
+                    // self-heal if the swap didn't happen (e.g. another mod replaced the dialog)
+                    dialog = new ExtSchematicsDialog();
+                    ui.schematics = dialog;
                 }
+                dialog.importFromPngAndShow(file);
             }catch(Throwable e){
                 Log.err("Failed to import image schematic", e);
                 ui.showException("@save.import.invalid", e);

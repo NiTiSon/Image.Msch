@@ -112,7 +112,6 @@ public class ExtSchematicsDialog extends SchematicsDialog{
                 bg.dispose();
             }
         }catch(Throwable ignore){
-            //ponytail: no texture file (e.g. stripped assets), solid dark fallback
             out.fill(0x0A0A0AFF);
         }
     }
@@ -133,7 +132,8 @@ public class ExtSchematicsDialog extends SchematicsDialog{
 
         int scale = Math.max(1, Math.min(out.width, out.height) / 4 / qr.size);
         int size = qr.size * scale;
-        int margin = 10;
+
+        final int margin = 0;
 
         Pixmap qp = new Pixmap(size, size);
         try{
