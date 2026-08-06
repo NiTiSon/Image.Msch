@@ -21,9 +21,7 @@ public class DropdownListener implements ApplicationListener {
         Core.app.post(() -> {
             try{
                 if (ui.schematics instanceof ExtSchematicsDialog dialog){
-                    Schematic schematic = dialog.importSchematic(file);
-                    Vars.schematics.add(schematic);
-                    dialog.showInfo(schematic);
+                    dialog.importFromPngAndShow(file);
                 } else {
                     Log.err("For some reason image schematics dialog was not embed. This probably because of other mods.");
                 }

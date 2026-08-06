@@ -1,6 +1,5 @@
 package nitis.imageMsch;
 
-import arc.Core;
 import mindustry.ClientLauncher;
 import mindustry.Vars;
 import mindustry.mod.Mod;
@@ -9,12 +8,15 @@ public class ImageMschMod extends Mod{
     @Override
     public void init() {
         ClientLauncher.runOnClientLoad(() -> {
-            if(!(Vars.ui.schematics instanceof ImageSchematicsDialog)){
+            if(!(Vars.ui.schematics instanceof ExtSchematicsDialog)){
                 // Probably ain't best way of doing that, but at least stable and does not require bytecode modification.
-                Vars.ui.schematics = new ImageSchematicsDialog();
+                Vars.ui.schematics = new ExtSchematicsDialog();
             }
 
-            Core.app.addListener(new DropdownListener());
+            // Register dropdown launcher.
+            if(Vars.platform instanceof ClientLauncher launcher){
+                launcher.add(new DropdownListener());
+            }
         });
     }
 }
