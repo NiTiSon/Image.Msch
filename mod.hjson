@@ -1,7 +1,7 @@
-name: "example-java-mod"
+name: "image-msch"
 
 version: 1.0
-minGameVersion: 158
+minGameVersion: 159
 
 displayName: "Image.msch"
 description: "Mod, that allows user to share schemes via images."
@@ -10,3 +10,6 @@ author: "NiTiSon"
 
 main: "nitis.imageMsch.ImageMschMod"
 java: true
+
+# This makes mod available in multiplayer?
+hidden: true
