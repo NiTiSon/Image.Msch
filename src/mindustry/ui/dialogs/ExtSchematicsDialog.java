@@ -21,6 +21,18 @@ import static mindustry.Vars.*;
 
 public class ExtSchematicsDialog extends SchematicsDialog{
 
+    /** Calls a package-private {@link SchematicsDialog} method reflectively: same-package access is denied
+      * at runtime because the mod and the game load their classes in different classloaders. */
+    private void invokeSchematics(String name, Class<?>[] types, Object... args){
+        try{
+            java.lang.reflect.Method m = SchematicsDialog.class.getDeclaredMethod(name, types);
+            m.setAccessible(true);
+            m.invoke(this, args);
+        }catch(Throwable e){
+            throw new RuntimeException(e);
+        }
+    }
+
     /** Same as vanilla, but the import button also accepts PNG images. */
     @Override
     public void showImport(){
@@ -37,9 +49,9 @@ public class ExtSchematicsDialog extends SchematicsDialog{
                         Schematic s = Schematics.readBase64(Core.app.getClipboardText());
                         s.removeSteamID();
                         schematics.add(s);
-                        setup();
+                        invokeSchematics("setup", new Class<?>[0]);
                         ui.showInfoFade("@schematic.saved");
-                        checkTags(s);
+                        invokeSchematics("checkTags", new Class[]{Schematic.class}, s);
                         showInfo(s);
                     }catch(Throwable e){
                         ui.showException(e);
@@ -59,7 +71,7 @@ public class ExtSchematicsDialog extends SchematicsDialog{
                                 Schematic s = Schematics.read(file);
                                 s.removeSteamID();
                                 schematics.add(s);
-                                checkTags(s);
+                                invokeSchematics("checkTags", new Class[]{Schematic.class}, s);
                                 last = s;
                             }
                         }catch(Exception e){
@@ -71,7 +83,7 @@ public class ExtSchematicsDialog extends SchematicsDialog{
                         showInfo(last);
                     }
 
-                    setup();
+                    invokeSchematics("setup", new Class<?>[0]);
                 })).marginLeft(12f);
                 t.row();
                 if(steam){
