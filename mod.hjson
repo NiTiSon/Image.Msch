@@ -1,10 +1,21 @@
 name: "image-msch"
 
-version: 1.0
+version: v1
 minGameVersion: 159
 
 displayName: "Image.msch"
-description: "Mod, that allows user to share schemes via images."
+description:
+  '''
+[white[]] This mod adds ability to share schematics via png images.[[]]
+
+[accent[]] [#FFF000[]]Features:[[]]
+[white[]] Export schematic-images and share them with your friends (or enemy).[[]]
+[white[]] Dropdown images to import schematics.[[]]
+
+ How does it works?
+[white[]] The game stores schematics either as msch files or base64 encoded strings. This mod stores schematic data inside png file sector for metadata.
+By that you can both share and show your schematics at the same time.[[]]
+  '''
 
 author: "NiTiSon"
 
