@@ -1,6 +1,6 @@
 name: "image-msch"
 
-version: v1
+version: v1.1
 minGameVersion: 159
 
 displayName: "Image.msch"
