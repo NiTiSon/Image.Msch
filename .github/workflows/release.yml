@@ -1,0 +1,29 @@
+name: Release Mod
+
+on:
+  push:
+    tags: ["*"]
+
+jobs:
+  releaseJars:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up PATH
+      run: |
+        echo "${ANDROID_HOME}/build-tools/34.0.0" >> $GITHUB_PATH
+    - name: Set up JDK 17
+      uses: actions/setup-java@v5
+      with:
+        distribution: 'temurin'
+        java-version: 17
+    - name: Build Desktop and Android jars
+      run: |
+        chmod +x ./gradlew
+        ./gradlew jar jarAndroid
+    - name: Upload jars to release
+      uses: softprops/action-gh-release@v2
+      with:
+        files: |
+          build/libs/*.jar
