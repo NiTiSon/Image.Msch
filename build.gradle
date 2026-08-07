@@ -1,6 +1,7 @@
 apply plugin: "java"
 
 sourceSets.main.java.srcDirs = ["src"]
+sourceSets.main.java.exclude "io/nayuki/**"
 
 ext{
     // Mindustry version to depend on.
@@ -77,6 +78,7 @@ jar{
 
     from(projectDir){
         include "mod.hjson"
+        include "icon.png"
     }
 
     from("assets/"){

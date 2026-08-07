@@ -4,6 +4,7 @@ import arc.ApplicationListener;
 import arc.Core;
 import arc.files.Fi;
 import arc.util.Log;
+import mindustry.ui.dialogs.ExtSchematicsDialog;
 
 import static mindustry.Vars.ui;
 

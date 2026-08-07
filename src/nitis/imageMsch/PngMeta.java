@@ -7,10 +7,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.zip.CRC32;
 
 /** Reads and writes a text (tEXt) chunk inside a PNG file.
-  * This is the main way to transfer schematic, QR codes used for messengers, that compact images. */
+  * This is the main way to transfer a schematic via an image. */
 public class PngMeta{
     private static final String KEY = "imsch";
-    private static final int typeText = 0x745874; // "tEXt"
+    private static final int typeText = 0x74455874; // "tEXt"
     private static final int typeEnd = 0x49454E44; // "IEND"
 
     /** Writes the file with the value stored in a tEXt chunk. */

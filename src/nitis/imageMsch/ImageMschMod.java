@@ -8,6 +8,7 @@ import mindustry.Vars;
 import mindustry.game.EventType.ResizeEvent;
 import mindustry.gen.Icon;
 import mindustry.mod.Mod;
+import mindustry.ui.dialogs.ExtSchematicsDialog;
 import mindustry.ui.fragments.MenuFragment.MenuButton;
 
 public class ImageMschMod extends Mod{
