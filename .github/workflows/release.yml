@@ -24,7 +24,7 @@ jobs:
     - name: Build Desktop and Android jars
       run: |
         chmod +x ./gradlew
-        ./gradlew jar jarAndroid
+        ./gradlew deploy
     - name: Upload jars to release
       uses: softprops/action-gh-release@v2
       with:
