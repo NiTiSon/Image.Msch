@@ -1,6 +1,6 @@
 name: "image-msch"
 
-version: v1.1
+version: v2
 minGameVersion: 159
 
 displayName: "Image.msch"
@@ -13,7 +13,8 @@ description:
 [white[]] Dropdown images to import schematics.[[]]
 
  How does it works?
-[white[]] The game stores schematics either as msch files or base64 encoded strings. This mod stores schematic data inside png file sector for metadata.
+[white[]] The game stores schematics either as msch files or base64 encoded strings.
+This mod stores schematic data inside png itself.
 By that you can both share and show your schematics at the same time.[[]]
   '''
 

@@ -13,6 +13,7 @@ import mindustry.gen.*;
 import mindustry.ui.*;
 import mindustry.ui.FileChooser;
 import nitis.imageMsch.ImageRenderer;
+import nitis.imageMsch.PixelMeta;
 import nitis.imageMsch.PngMeta;
 
 import java.io.*;
@@ -137,6 +138,17 @@ public class ExtSchematicsDialog extends SchematicsDialog{
         try{
             String base64 = PngMeta.read(file);
             if(base64 == null){
+                byte[] data = PixelMeta.read(file);
+                if(data != null){
+                    Schematic s = Schematics.read(new ByteArrayInputStream(data));
+                    s.removeSteamID();
+                    schematics.add(s);
+                    showInfo(s);
+                    return;
+                }
+            }
+
+            if(base64 == null){
                 ui.showInfo(Core.bundle.format("image-msch.invalid", file.name()));
                 return;
             }
@@ -153,6 +165,7 @@ public class ExtSchematicsDialog extends SchematicsDialog{
         try{
             Pixmap out = ImageRenderer.composite(s, file);
             try{
+                PixelMeta.embed(out, schematicsBytes(s));
                 PixmapIO.writePng(file, out);
             }finally{
                 out.dispose();
@@ -163,5 +176,12 @@ public class ExtSchematicsDialog extends SchematicsDialog{
         }catch(Throwable e){
             ui.showException(e);
         }
+    }
+
+    /** Raw schematic bytes, cheaper than the base64 used in the tEXt chunk. */
+    private static byte[] schematicsBytes(Schematic s) throws IOException{
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        Schematics.write(s, bytes);
+        return bytes.toByteArray();
     }
 }

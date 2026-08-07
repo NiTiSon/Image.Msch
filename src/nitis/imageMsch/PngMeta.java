@@ -9,13 +9,13 @@ import java.util.zip.CRC32;
 /** Reads and writes a text (tEXt) chunk inside a PNG file.
   * This is the main way to transfer a schematic via an image. */
 public class PngMeta{
-    private static final String KEY = "imsch";
+    private static final String key = "imsch";
     private static final int typeText = 0x74455874; // "tEXt"
     private static final int typeEnd = 0x49454E44; // "IEND"
 
     /** Writes the file with the value stored in a tEXt chunk. */
     public static void embed(Fi file, String value) throws IOException{
-        embed(file, KEY, value);
+        embed(file, key, value);
     }
 
     /** Writes the file with a tEXt chunk (keyword + value) inserted before the IEND chunk. */
@@ -53,7 +53,7 @@ public class PngMeta{
 
     /** @return the stored value, or null if the PNG has no such chunk. */
     public static String read(Fi file){
-        return read(file, KEY);
+        return read(file, key);
     }
 
     /** @return the stored value for the keyword, or null if the PNG has no such chunk. */
