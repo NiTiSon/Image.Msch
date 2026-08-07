@@ -1,4 +1,5 @@
 # Image.Msch
+[![Commit test](https://github.com/NiTiSon/Image.Msch/actions/workflows/commitTest.yml/badge.svg)](https://github.com/NiTiSon/Image.Msch/actions/workflows/commitTest.yml)  
 This is a mod for the game [Mindustry](https://github.com/Anuken/Mindustry).  
 The main purpose of the mod is to add the ability to share schematics (`.msch` files) through PNG images.
 
@@ -46,12 +47,3 @@ Just save it anywhere you like, and share it with your friends (I hope you have 
 Currently, the mod allows two ways of importing image schematics:
 1. Through the import menu
 2. By dropping an image into the game window (drag-and-drop)
-
-## Example
-You can try the mod's functionality yourself:
-+ Install the mod
-+ Restart the game
-+ Click and hold the image below, then drag-and-drop it into the game window
-+ Get shocked
-
-<img width="224" height="384" alt="Full Titanium Metaglass Conveyour" src="https://github.com/user-attachments/assets/45a2206a-8593-4f72-8c21-c8b65a70816a" />
