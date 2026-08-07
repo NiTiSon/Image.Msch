@@ -23,7 +23,9 @@ public class ImageMschMod extends Mod{
             // at UI construction time, so swapping Vars.ui.schematics never reaches it - repoint it
             repointMenuSchematicsButton();
 
-            Core.app.addListener(new DropdownListener());
+            if (Core.app.isDesktop()){
+                Core.app.addListener(new DropdownListener());
+            }
         });
     }
 
