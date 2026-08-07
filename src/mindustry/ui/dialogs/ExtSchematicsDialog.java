@@ -11,7 +11,6 @@ import mindustry.game.Schematic;
 import mindustry.game.Schematics;
 import mindustry.gen.*;
 import mindustry.ui.*;
-import mindustry.ui.dialogs.*;
 import mindustry.ui.FileChooser;
 import nitis.imageMsch.ImageRenderer;
 import nitis.imageMsch.PngMeta;

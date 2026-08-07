@@ -37,7 +37,7 @@ public class PngMeta{
             int crc = in.readInt();
 
             if(readInt(type) == typeEnd){
-                writeChunk(out, "tEXt", (keyword + "\0" + value).getBytes(StandardCharsets.UTF_8));
+                writeChunk(out, (keyword + "\0" + value).getBytes(StandardCharsets.UTF_8));
             }
 
             out.write(intBytes(length));
@@ -90,8 +90,9 @@ public class PngMeta{
         return null;
     }
 
-    private static void writeChunk(OutputStream out, String type, byte[] data) throws IOException{
-        byte[] t = type.getBytes(StandardCharsets.US_ASCII);
+    private static void writeChunk(OutputStream out, byte[] data) throws IOException{
+        @SuppressWarnings("SpellCheckingInspection")
+        byte[] t = "tEXt".getBytes(StandardCharsets.US_ASCII);
         CRC32 crc = new CRC32();
         crc.update(t);
         crc.update(data);
