@@ -2,8 +2,32 @@
 This is a mod for the game [Mindustry](https://github.com/Anuken/Mindustry).  
 The main purpose of the mod is to add the ability to share schematics (`.msch` files) through PNG images.
 
+> [!TIP]
+> This mod isn't tested on Android. You can report bug in [here](https://github.com/NiTiSon/Image.Msch/issues?q=sort%3Aupdated-desc+is%3Aissue+state%3Aopen+).
+
 # Install
-TODO...
+
+## In-game mod menu
+1. Open mods menu
+2. Click import
+3. Select from GitHub
+4. Enter "NiTiSon/Image.Msch"
+
+## From Releases
+1. Go to the [releases](https://github.com/NiTiSon/Image.Msch/releases) page.
+2. Download Image.Msch mod file (ends with `.jar`)
+   1. File without suffix is playable for both Desktop and Android versions.
+   2. File with `Desktop` suffix is only playable only on Desktop (reduced size).
+3. Enter the game
+4. Open mod menu and select import
+5. Press import from file
+6. Choose Image.Msch mod file.
+
+## From Github actions
+Github actions stores artifacts from build for some time.  
+Most of them are unstable.
+[All recent runs available here](https://github.com/NiTiSon/Image.Msch/actions).
+
 
 # Usage
 
