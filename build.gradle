@@ -45,6 +45,8 @@ java{
 
 dependencies{
     compileOnly mindustryVersion == "be" ? "Anuken:MindustryBuilds:latest" : "Anuken:Mindustry:$mindustryVersion"
+    // LWJGL SDL bindings (SDL event watch); matches the 3.4.2 stable bundle the game ships
+    compileOnly "org.lwjgl:lwjgl-sdl:3.4.2"
 }
 
 tasks.register('jarAndroid'){

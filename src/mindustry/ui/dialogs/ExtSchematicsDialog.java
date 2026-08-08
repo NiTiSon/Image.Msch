@@ -67,7 +67,7 @@ public class ExtSchematicsDialog extends SchematicsDialog{
                     for(Fi file : files){
                         try{
                             if(file.extEquals("png")){
-                                importFromPngAndShow(file);
+                                importFromAnyAndShow(file);
                             }else{
                                 Schematic s = Schematics.read(file);
                                 s.removeSteamID();
@@ -132,6 +132,53 @@ public class ExtSchematicsDialog extends SchematicsDialog{
 
         dialog.addCloseButton();
         dialog.show();
+    }
+
+    /** Imports any of the supported formats by signature: PNG image, binary schematic, or base64 text. */
+    public void importFromAnyAndShow(Fi file){
+        try{
+            byte[] head = new byte[4];
+            if(file.length() >= 4) file.readBytes(head, 0, 4);
+
+            if(isPng(head)){
+                importFromPngAndShow(file);
+            }else if(isSchematic(head)){
+                Schematic s = Schematics.read(file);
+                s.removeSteamID();
+                schematics.add(s);
+                invokeSchematics("checkTags", new Class[]{Schematic.class}, s);
+                showInfo(s);
+            }else if(file.length() <= 1_000_000 && startsWithBase64(file)){
+                Schematic s = Schematics.readBase64(file.readString());
+                s.removeSteamID();
+                schematics.add(s);
+                invokeSchematics("checkTags", new Class[]{Schematic.class}, s);
+                showInfo(s);
+            }else{
+                ui.showInfo(Core.bundle.format("image-msch.invalid", file.name()));
+            }
+        }catch(Throwable e){
+            ui.showException(e);
+        }
+    }
+
+    private static boolean isPng(byte[] b){
+        return b.length >= 4 && (b[0] & 0xff) == 0x89 && b[1] == 'P' && b[2] == 'N' && b[3] == 'G';
+    }
+
+    private static boolean isSchematic(byte[] b){
+        return b.length >= 4 && b[0] == 'm' && b[1] == 's' && b[2] == 'c' && b[3] == 'h';
+    }
+
+    private static boolean startsWithBase64(Fi file){
+        try(DataInputStream in = new DataInputStream(file.read())){
+            for(int i = 0; i < schematicBaseStart.length(); i++){
+                if(in.read() != schematicBaseStart.charAt(i)) return false;
+            }
+            return true;
+        }catch(Throwable e){
+            return false;
+        }
     }
 
     public void importFromPngAndShow(Fi file){
