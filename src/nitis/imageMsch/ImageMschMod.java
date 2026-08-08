@@ -5,6 +5,7 @@ import arc.Events;
 import arc.struct.Seq;
 import mindustry.ClientLauncher;
 import mindustry.Vars;
+import mindustry.core.Version;
 import mindustry.game.EventType.ResizeEvent;
 import mindustry.gen.Icon;
 import mindustry.mod.Mod;
@@ -23,8 +24,12 @@ public class ImageMschMod extends Mod{
             // at UI construction time, so swapping Vars.ui.schematics never reaches it - repoint it
             repointMenuSchematicsButton();
 
-            if (Core.app.isDesktop()){
+            if(Core.app.isDesktop()){
                 Core.app.addListener(new DropdownListener());
+
+                if(Version.number >= 9){ // v9 uses SDL3, while v8 uses SDL2
+                    LinkDropWatcher.register();
+                }
             }
         });
     }
