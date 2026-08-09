@@ -16,23 +16,36 @@ import nitis.imageMsch.PixelMeta;
 import nitis.imageMsch.PngMeta;
 
 import java.io.*;
+import java.lang.reflect.Method;
 
 import static mindustry.Vars.*;
 
 public class ExtSchematicsDialog extends SchematicsDialog{
     @Override
-    public void setup() {
-        super.setup();
+    public void setup(){
+        invoke("setup");
     }
 
     @Override
-    public void checkTags() {
-        super.checkTags();
+    public void checkTags(){
+        invoke("checkTags");
     }
 
     @Override
-    void checkTags(Schematic s) {
-        super.checkTags(s);
+    void checkTags(Schematic s){
+        invoke("checkTags", s);
+    }
+
+    private void invoke(String name, Object... args){
+        try{
+            Class<?>[] types = new Class<?>[args.length];
+            for(int i = 0; i < args.length; i++) types[i] = args[i].getClass();
+            Method m = SchematicsDialog.class.getDeclaredMethod(name, types);
+            m.setAccessible(true);
+            m.invoke(this, args);
+        }catch(Throwable e){
+            Log.err(e);
+        }
     }
 
     /** Same as vanilla, but the import button also accepts PNG images. */
