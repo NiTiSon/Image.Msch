@@ -21,17 +21,30 @@ public class SDL3LinkDropWatcher {
         if(callback != null) return;
         callback = org.lwjgl.sdl.SDL_EventFilter.create((userdata, event) -> {
             if(org.lwjgl.sdl.SDL_Event.ntype(event) == org.lwjgl.sdl.SDLEvents.SDL_EVENT_DROP_TEXT){
-                String link = org.lwjgl.sdl.SDL_DropEvent.ndataString(event + org.lwjgl.sdl.SDL_Event.DROP);
-                if(link != null && (link.startsWith("http://") || link.startsWith("https://"))){
-                    onLink(link);
+                String text = org.lwjgl.sdl.SDL_DropEvent.ndataString(event + org.lwjgl.sdl.SDL_Event.DROP);
+                if(text != null && (text.startsWith("http://") || text.startsWith("https://"))){
+                    onLink(text);
                 }
-                if(link != null && link.startsWith("bXNj")){
-                    // Import from base64
+                if(text != null && text.startsWith("bXNj")){
+                    onBase64(text);
                 }
             }
             return true;
         });
         org.lwjgl.sdl.SDLEvents.SDL_AddEventWatch(callback, 0);
+    }
+
+    private static void onBase64(String schematic){
+        Core.app.post(() -> {
+            ExtSchematicsDialog dialog;
+            if(ui.schematics instanceof ExtSchematicsDialog d){
+                dialog = d;
+            }else{
+                dialog = new ExtSchematicsDialog();
+                ui.schematics = dialog;
+            }
+            dialog.importFromBase64(schematic);
+        });
     }
 
     private static void onLink(String link){
