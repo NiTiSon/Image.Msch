@@ -58,7 +58,7 @@ public class SDL3LinkDropWatcher {
 
             Core.app.post(() -> {
                 try{
-                    Fi file = Core.files.local("tmp/" + nameFrom(link, isPng(bytes) ? ".png" : ".msch"));
+                    Fi file = Core.files.local("saves/tmp/" + nameFrom(link, isPng(bytes) ? ".png" : ".msch"));
                     file.writeBytes(bytes);
                     importFrom(file);
                 }catch(Throwable e){
