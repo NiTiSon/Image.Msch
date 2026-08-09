@@ -28,7 +28,7 @@ public class ImageMschMod extends Mod{
                 Core.app.addListener(new DropdownListener());
 
                 if(Version.number >= 9){ // v9 uses SDL3, while v8 uses SDL2
-                    LinkDropWatcher.register();
+                    SDL3LinkDropWatcher.register();
                 }
             }
         });

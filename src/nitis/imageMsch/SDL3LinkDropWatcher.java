@@ -14,7 +14,7 @@ import static mindustry.Vars.ui;
 /** Downloads drag-n-dropped image links (SDL_EVENT_DROP_TEXT), which arc does not surface as file drops.
  *  Reads the event through raw static accessors (no Struct wrappers) because this LWJGL fork's
  *  Struct.free() unconditionally frees the address, and SDL owns this event memory. */
-public class LinkDropWatcher{
+public class SDL3LinkDropWatcher {
     private static org.lwjgl.sdl.SDL_EventFilter callback;
 
     public static void register(){
@@ -53,7 +53,7 @@ public class LinkDropWatcher{
             }
             byte[] bytes = response.getResult();
             if(!isPng(bytes)){
-                Core.app.post(() -> ui.showInfo(Core.bundle.format("image-msch.link-drop-download.invalid", link)));
+                Core.app.post(() -> ui.showInfo(Core.bundle.get("image-msch.link-drop-download.invalid")));
                 return;
             }
             Core.app.post(() -> {
@@ -67,8 +67,8 @@ public class LinkDropWatcher{
                 }
             });
         }, error -> {
-            Log.err("Failed to download dropped link: @", error, link);
-            Core.app.post(() -> ui.showInfoFade(Core.bundle.format("image-msch.link-drop-download.error", link)));
+            Log.err("Failed to download dropped link", error, link);
+            Core.app.post(() -> ui.showInfoFade(Core.bundle.get("image-msch.link-drop-download.error")));
         });
     }
 
@@ -90,6 +90,6 @@ public class LinkDropWatcher{
 
     private static String nameFrom(String link){
         String name = link.substring(link.lastIndexOf('/') + 1);
-        return name.isEmpty() || name.contains("?") || !name.endsWith(".png") ? "drop.png" : name;
+        return name.contains("?") || !name.endsWith(".png") ? "drop.png" : name;
     }
 }
