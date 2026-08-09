@@ -11,9 +11,7 @@ import mindustry.game.Schematics;
 import mindustry.gen.*;
 import mindustry.ui.*;
 import mindustry.ui.FileChooser;
-import nitis.imageMsch.ImageRenderer;
-import nitis.imageMsch.PixelMeta;
-import nitis.imageMsch.PngMeta;
+import nitis.imageMsch.*;
 
 import java.io.*;
 import java.lang.reflect.Method;
@@ -143,10 +141,27 @@ public class ExtSchematicsDialog extends SchematicsDialog{
                     FileChooser.export(s.name(), schematicExtension, file -> Schematics.write(s, file));
                 }).marginLeft(12f);
                 t.row();
-                t.button("@image-msch.export.image", Icon.image, style, () -> {
+                t.button("@image-msch.export.image", Icon.fileImage, style, () -> {
                     dialog.hide();
                     FileChooser.export(s.name(), "png", file -> writeImage(s, file));
                 }).marginLeft(12f);
+                if(ImageMschMod.isImageClipboardSupported()){
+                    t.row();
+                    t.button("@image-msch.export.clipboard", Icon.image, style, () -> {
+                        dialog.hide();
+                        Fi tmp = Core.files.local("saves/tmp/clipboard.png");
+                        Pixmap pm = ImageRenderer.composite(s, tmp);
+                        try{
+                            PixelMeta.embed(pm, schematicsBytes(s));
+                            ImageClipboard.copy(pm);
+                        }catch(Throwable e){
+                            ui.showException(e);
+                        }finally{
+                            pm.dispose();
+                            tmp.delete();
+                        }
+                    }).marginLeft(12f);
+                }
             });
         });
 
