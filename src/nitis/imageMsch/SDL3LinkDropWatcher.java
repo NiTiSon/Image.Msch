@@ -42,16 +42,7 @@ public class SDL3LinkDropWatcher {
     }
 
     private static void onBase64(String schematic){
-        Core.app.post(() -> {
-            ExtSchematicsDialog dialog;
-            if(ui.schematics instanceof ExtSchematicsDialog d){
-                dialog = d;
-            }else{
-                dialog = new ExtSchematicsDialog();
-                ui.schematics = dialog;
-            }
-            dialog.importFromBase64(schematic);
-        });
+        Core.app.post(() -> ImageMschMod.schematics.importFromBase64(schematic));
     }
 
     private static void onFileLink(String link){
@@ -106,14 +97,7 @@ public class SDL3LinkDropWatcher {
 
     /** Looks up (or self-heals) the extended dialog and imports the file like a regular drop. */
     private static void importFrom(Fi file){
-        ExtSchematicsDialog dialog;
-        if(ui.schematics instanceof ExtSchematicsDialog d){
-            dialog = d;
-        }else{
-            dialog = new ExtSchematicsDialog();
-            ui.schematics = dialog;
-        }
-        dialog.importFromAnyAndShow(file);
+        ImageMschMod.schematics.importFromAnyAndShow(file);
     }
 
     private static boolean isPng(byte[] b){

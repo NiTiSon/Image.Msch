@@ -47,3 +47,12 @@ Just save it anywhere you like, and share it with your friends (I hope you have 
 Currently, the mod allows two ways of importing image schematics:
 1. Through the import menu
 2. By dropping an image into the game window (drag-and-drop)
+
+## Limitations
+Due to the limitations of SDL2, some QoL functions isn't available in V8 Mindustry.  
+Despite this the mod is fully functional.
+If you want to get full content, enter the `v9-testing` or `bleeding-edge` beta.
+
+Not available content in V8:
++ Drag-n-drop (not sure if it is safe yet)
++ Copy image to the clipboard (SDL2 just doesn't support non-text clipboard)

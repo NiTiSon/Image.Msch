@@ -13,11 +13,13 @@ import mindustry.ui.dialogs.ExtSchematicsDialog;
 import mindustry.ui.fragments.MenuFragment.MenuButton;
 
 public class ImageMschMod extends Mod{
+    public static ExtSchematicsDialog schematics;
+
     @Override
     public void init(){
         ClientLauncher.runOnClientLoad(() -> {
             if(!(Vars.ui.schematics instanceof ExtSchematicsDialog)){
-                Vars.ui.schematics = new ExtSchematicsDialog();
+                Vars.ui.schematics = schematics = new ExtSchematicsDialog();
             }
 
             // the main-menu "Schematics" button is a method reference bound to the original dialog
@@ -25,9 +27,9 @@ public class ImageMschMod extends Mod{
             repointMenuSchematicsButton();
 
             if(Core.app.isDesktop()){
-                Core.app.addListener(new DropdownListener());
+                Core.app.addListener(new FileDropListener());
 
-                if(Version.number >= 9){ // v9 uses SDL3, while v8 uses SDL2
+                if(isDragAndDropAllowed()){
                     SDL3LinkDropWatcher.register();
                 }
             }
@@ -49,5 +51,13 @@ public class ImageMschMod extends Mod{
                 }
             }
         }
+    }
+
+    public static boolean isDragAndDropAllowed() { // v9 uses SDL3, while v8 uses SDL2
+        return Version.number >= 9;
+    }
+
+    public static boolean isImageClipboardSupported() {
+        return Version.number >= 9;
     }
 }
