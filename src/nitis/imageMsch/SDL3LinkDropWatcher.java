@@ -55,13 +55,10 @@ public class SDL3LinkDropWatcher {
                 return;
             }
             byte[] bytes = response.getResult();
-            if(!isPng(bytes)){
-                Core.app.post(() -> ui.showInfo(Core.bundle.get("image-msch.link-drop-download.invalid")));
-                return;
-            }
+
             Core.app.post(() -> {
                 try{
-                    Fi file = Core.files.local("tmp/" + nameFrom(link));
+                    Fi file = Core.files.local("tmp/" + nameFrom(link, isPng(bytes) ? ".png" : ".msch"));
                     file.writeBytes(bytes);
                     importFrom(file);
                 }catch(Throwable e){
@@ -91,8 +88,8 @@ public class SDL3LinkDropWatcher {
         return b.length >= 4 && (b[0] & 0xff) == 0x89 && b[1] == 'P' && b[2] == 'N' && b[3] == 'G';
     }
 
-    private static String nameFrom(String link){
+    private static String nameFrom(String link, String ext){
         String name = link.substring(link.lastIndexOf('/') + 1);
-        return name.contains("?") || !name.endsWith(".png") ? "drop.png" : name;
+        return name.contains("?") || !name.endsWith(ext) ? "drop" + ext : name;
     }
 }
