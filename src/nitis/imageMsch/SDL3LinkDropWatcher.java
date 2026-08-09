@@ -22,11 +22,18 @@ public class SDL3LinkDropWatcher {
         callback = org.lwjgl.sdl.SDL_EventFilter.create((userdata, event) -> {
             if(org.lwjgl.sdl.SDL_Event.ntype(event) == org.lwjgl.sdl.SDLEvents.SDL_EVENT_DROP_TEXT){
                 String text = org.lwjgl.sdl.SDL_DropEvent.ndataString(event + org.lwjgl.sdl.SDL_Event.DROP);
-                if(text != null && (text.startsWith("http://") || text.startsWith("https://"))){
+                if(text == null){
+                    return true;
+                }
+
+                if(text.startsWith("http://") || text.startsWith("https://")){
                     onLink(text);
                 }
-                if(text != null && text.startsWith("bXNj")){
+                if(text.startsWith("bXNj")){
                     onBase64(text);
+                }
+                if(text.startsWith("file:///")) {
+                    onFileLink(text);
                 }
             }
             return true;
@@ -44,6 +51,18 @@ public class SDL3LinkDropWatcher {
                 ui.schematics = dialog;
             }
             dialog.importFromBase64(schematic);
+        });
+    }
+
+    private static void onFileLink(String link){
+        Core.app.post(() -> {
+            try{
+                Fi file = Core.files.absolute(link.substring("file:///".length()));
+                importFrom(file);
+            }catch(Throwable e){
+                Log.err(e);
+                ui.showException(e);
+            }
         });
     }
 
