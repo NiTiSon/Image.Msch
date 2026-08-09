@@ -76,7 +76,6 @@ public class ExtSchematicsDialog extends SchematicsDialog{
                         showInfo(last);
                     }
 
-                    //invokeInternal("setup", new Class<?>[0]);
                     setup();
                 })).marginLeft(12f);
                 t.row();
@@ -98,7 +97,6 @@ public class ExtSchematicsDialog extends SchematicsDialog{
             Schematic s = Schematics.readBase64(base64);
             s.removeSteamID();
             schematics.add(s);
-            //invokeInternal("setup", new Class<?>[0]);
             setup();
             ui.showInfoFade("@schematic.saved");
             checkTags(s);
@@ -152,17 +150,9 @@ public class ExtSchematicsDialog extends SchematicsDialog{
             if(isPng(head)){
                 importFromPngAndShow(file);
             }else if(isSchematic(head)){
-                Schematic s = Schematics.read(file);
-                s.removeSteamID();
-                schematics.add(s);
-                checkTags(s);
-                showInfo(s);
+                addAndShow(Schematics.read(file));
             }else if(file.length() <= 1_000_000 && startsWithBase64(file)){
-                Schematic s = Schematics.readBase64(file.readString());
-                s.removeSteamID();
-                schematics.add(s);
-                checkTags(s);
-                showInfo(s);
+                addAndShow(Schematics.readBase64(file.readString()));
             }else{
                 ui.showInfo(Core.bundle.format("image-msch.invalid", file.name()));
             }
@@ -197,10 +187,7 @@ public class ExtSchematicsDialog extends SchematicsDialog{
             if(base64 == null){
                 byte[] data = PixelMeta.read(file);
                 if(data != null){
-                    Schematic s = Schematics.read(new ByteArrayInputStream(data));
-                    s.removeSteamID();
-                    schematics.add(s);
-                    showInfo(s);
+                    addAndShow(new ByteArrayInputStream(data));
                     return;
                 }
             }
@@ -209,14 +196,25 @@ public class ExtSchematicsDialog extends SchematicsDialog{
                 ui.showInfo(Core.bundle.format("image-msch.invalid", file.name()));
                 return;
             }
-            Schematic s = Schematics.readBase64(base64);
-            s.removeSteamID();
-            schematics.add(s);
-            showInfo(s);
+            addAndShow(Schematics.readBase64(base64));
         }catch(Throwable e){
             Log.err(e);
             ui.showException(e);
         }
+    }
+
+    /** Adds a schematic, refreshes the dialog list, and shows its info. Mirrors vanilla {@code importAndShow}. */
+    private void addAndShow(InputStream stream) throws IOException{
+        Schematic s = Schematics.read(stream);
+        addAndShow(s);
+    }
+
+    private void addAndShow(Schematic s){
+        s.removeSteamID();
+        schematics.add(s);
+        checkTags(s);
+        setup();
+        showInfo(s);
     }
 
     private void writeImage(Schematic s, Fi file){
