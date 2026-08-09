@@ -4,9 +4,8 @@ import arc.Core;
 import arc.files.Fi;
 import arc.graphics.Pixmap;
 import arc.graphics.PixmapIO;
-import arc.scene.ui.*;
 import arc.scene.ui.TextButton.*;
-import arc.scene.ui.layout.*;
+import arc.util.Log;
 import mindustry.game.Schematic;
 import mindustry.game.Schematics;
 import mindustry.gen.*;
@@ -21,17 +20,19 @@ import java.io.*;
 import static mindustry.Vars.*;
 
 public class ExtSchematicsDialog extends SchematicsDialog{
+    @Override
+    public void setup() {
+        super.setup();
+    }
 
-    /** Calls a package-private {@link SchematicsDialog} method reflectively: same-package access is denied
-      * at runtime because the mod and the game load their classes in different classloaders. */
-    private void invokeSchematics(String name, Class<?>[] types, Object... args){
-        try{
-            java.lang.reflect.Method m = SchematicsDialog.class.getDeclaredMethod(name, types);
-            m.setAccessible(true);
-            m.invoke(this, args);
-        }catch(Throwable e){
-            throw new RuntimeException(e);
-        }
+    @Override
+    public void checkTags() {
+        super.checkTags();
+    }
+
+    @Override
+    void checkTags(Schematic s) {
+        super.checkTags(s);
     }
 
     /** Same as vanilla, but the import button also accepts PNG images. */
@@ -46,17 +47,7 @@ public class ExtSchematicsDialog extends SchematicsDialog{
                 t.row();
                 t.button("@load.clipboard", Icon.copy, style, () -> {
                     dialog.hide();
-                    try{
-                        Schematic s = Schematics.readBase64(Core.app.getClipboardText());
-                        s.removeSteamID();
-                        schematics.add(s);
-                        invokeSchematics("setup", new Class<?>[0]);
-                        ui.showInfoFade("@schematic.saved");
-                        invokeSchematics("checkTags", new Class[]{Schematic.class}, s);
-                        showInfo(s);
-                    }catch(Throwable e){
-                        ui.showException(e);
-                    }
+                    importFromBase64(Core.app.getClipboardText());
                 }).marginLeft(12f).disabled(b -> Core.app.getClipboardText() == null || !Core.app.getClipboardText().startsWith(schematicBaseStart));
                 t.row();
                 t.button("@import.file", Icon.download, style, () -> FileChooser.open(schematicExtension, "png").submitMulti(files -> {
@@ -72,10 +63,11 @@ public class ExtSchematicsDialog extends SchematicsDialog{
                                 Schematic s = Schematics.read(file);
                                 s.removeSteamID();
                                 schematics.add(s);
-                                invokeSchematics("checkTags", new Class[]{Schematic.class}, s);
+                                checkTags(s);
                                 last = s;
                             }
                         }catch(Exception e){
+                            Log.err(e);
                             ui.showException(e);
                         }
                     }
@@ -84,7 +76,8 @@ public class ExtSchematicsDialog extends SchematicsDialog{
                         showInfo(last);
                     }
 
-                    invokeSchematics("setup", new Class<?>[0]);
+                    //invokeInternal("setup", new Class<?>[0]);
+                    setup();
                 })).marginLeft(12f);
                 t.row();
                 if(steam){
@@ -98,6 +91,22 @@ public class ExtSchematicsDialog extends SchematicsDialog{
 
         dialog.addCloseButton();
         dialog.show();
+    }
+
+    public void importFromBase64(String base64){
+        try{
+            Schematic s = Schematics.readBase64(base64);
+            s.removeSteamID();
+            schematics.add(s);
+            //invokeInternal("setup", new Class<?>[0]);
+            setup();
+            ui.showInfoFade("@schematic.saved");
+            checkTags(s);
+            showInfo(s);
+        }catch(Throwable e){
+            Log.err(e);
+            ui.showException(e);
+        }
     }
 
     @Override
@@ -146,18 +155,19 @@ public class ExtSchematicsDialog extends SchematicsDialog{
                 Schematic s = Schematics.read(file);
                 s.removeSteamID();
                 schematics.add(s);
-                invokeSchematics("checkTags", new Class[]{Schematic.class}, s);
+                checkTags(s);
                 showInfo(s);
             }else if(file.length() <= 1_000_000 && startsWithBase64(file)){
                 Schematic s = Schematics.readBase64(file.readString());
                 s.removeSteamID();
                 schematics.add(s);
-                invokeSchematics("checkTags", new Class[]{Schematic.class}, s);
+                checkTags(s);
                 showInfo(s);
             }else{
                 ui.showInfo(Core.bundle.format("image-msch.invalid", file.name()));
             }
         }catch(Throwable e){
+            Log.err(e);
             ui.showException(e);
         }
     }
@@ -204,6 +214,7 @@ public class ExtSchematicsDialog extends SchematicsDialog{
             schematics.add(s);
             showInfo(s);
         }catch(Throwable e){
+            Log.err(e);
             ui.showException(e);
         }
     }
@@ -221,6 +232,7 @@ public class ExtSchematicsDialog extends SchematicsDialog{
             PngMeta.embed(file, schematics.writeBase64(s));
             ui.showInfoFade("@image-msch.export.done");
         }catch(Throwable e){
+            Log.err(e);
             ui.showException(e);
         }
     }

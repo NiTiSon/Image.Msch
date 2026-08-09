@@ -25,6 +25,9 @@ public class SDL3LinkDropWatcher {
                 if(link != null && (link.startsWith("http://") || link.startsWith("https://"))){
                     onLink(link);
                 }
+                if(link != null && link.startsWith("bXNj")){
+                    // Import from base64
+                }
             }
             return true;
         });
